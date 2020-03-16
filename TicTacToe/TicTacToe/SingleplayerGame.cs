@@ -13,7 +13,6 @@ namespace TicTacToe
 {
     public partial class SingleplayerGame : Form
     {
-        private bool turn = true;
         private Board board;
         private int difficultyDepth = 3;
         public SingleplayerGame()

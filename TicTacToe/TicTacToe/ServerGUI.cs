@@ -32,10 +32,13 @@ namespace TicTacToe
 
         private void ServerGUI_Load(object sender, EventArgs e)
         {
+
         }
 
         private void ServerGUI_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (!(this.client1 == null)) this.client1.Close();
+            if (!(this.client2 == null)) this.client2.Close();
             Application.Exit();
         }
 
@@ -87,6 +90,10 @@ namespace TicTacToe
             {
                 MessageBox.Show(ex.Message, "error");
             }
+        }
+        private bool IsClientConnected(TcpClient client)
+        {
+            return !((client.Client.Poll(1, SelectMode.SelectRead) && (client.Client.Available == 0)) || !client.Client.Connected);
         }
     }
 }

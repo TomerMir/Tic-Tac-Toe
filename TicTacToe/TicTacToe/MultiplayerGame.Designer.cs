@@ -28,13 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.connection = new System.Windows.Forms.Button();
             this.SuspendLayout();
+            // 
+            // connection
+            // 
+            this.connection.Location = new System.Drawing.Point(154, 138);
+            this.connection.Name = "connection";
+            this.connection.Size = new System.Drawing.Size(124, 127);
+            this.connection.TabIndex = 0;
+            this.connection.Text = "Test Connectoin";
+            this.connection.UseVisualStyleBackColor = true;
+            this.connection.Click += new System.EventHandler(this.Connection_Click);
             // 
             // MultiplayerGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(446, 450);
+            this.Controls.Add(this.connection);
             this.Name = "MultiplayerGame";
             this.Text = "Tic Tac Toe";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MultiplayerGame_FormClosing);
@@ -44,5 +56,7 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.Button connection;
     }
 }

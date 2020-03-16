@@ -84,6 +84,9 @@
     <Compile Include="SingleplayerGame.Designer.cs">
       <DependentUpon>SingleplayerGame.cs</DependentUpon>
     </Compile>
+    <Compile Include="TicTacToeBoard.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <EmbeddedResource Include="ConnectToServer.resx">
       <DependentUpon>ConnectToServer.cs</DependentUpon>
     </EmbeddedResource>

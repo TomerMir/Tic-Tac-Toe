@@ -33,7 +33,11 @@ namespace TicTacToe
 
         private void Single_Click(object sender, EventArgs e)
         {
-
+            SingleplayerGame gameForm = new SingleplayerGame();
+            gameForm.StartPosition = FormStartPosition.Manual;
+            gameForm.Location = this.Location;
+            this.Hide();
+            gameForm.Show();
         }
     }
 }

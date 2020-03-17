@@ -33,9 +33,9 @@
             // 
             // connection
             // 
-            this.connection.Location = new System.Drawing.Point(154, 138);
+            this.connection.Location = new System.Drawing.Point(352, 1);
             this.connection.Name = "connection";
-            this.connection.Size = new System.Drawing.Size(124, 127);
+            this.connection.Size = new System.Drawing.Size(92, 22);
             this.connection.TabIndex = 0;
             this.connection.Text = "Test Connectoin";
             this.connection.UseVisualStyleBackColor = true;
@@ -45,7 +45,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(446, 450);
+            this.ClientSize = new System.Drawing.Size(499, 549);
             this.Controls.Add(this.connection);
             this.Name = "MultiplayerGame";
             this.Text = "Tic Tac Toe";

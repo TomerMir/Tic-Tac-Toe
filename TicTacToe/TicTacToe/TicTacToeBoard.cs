@@ -43,35 +43,35 @@ namespace TicTacToe
 
         }
 
-        //public Board(MultiplayerGame form)
-        //{
-        //    this.ColumnCount = 3;
-        //    this.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-        //    this.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-        //    this.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+        public Board(MultiplayerGame form)
+        {
+            this.ColumnCount = 3;
+            this.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
 
-        //    this.RowCount = 3;
-        //    this.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-        //    this.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-        //    this.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.RowCount = 3;
+            this.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
 
-        //    this.Location = new System.Drawing.Point(0, 45);
-        //    this.Name = "Board";
-        //    this.Size = new System.Drawing.Size(this.width, this.height);
+            this.Location = new System.Drawing.Point(0, 45);
+            this.Name = "Board";
+            this.Size = new System.Drawing.Size(this.width, this.height);
 
-        //    for (int i = 0; i < 9; i++)
-        //    {
-        //        Cell tmpCell = new Cell(i);
-        //        tmpCell.TabStop = false;
-        //        tmpCell.Font = new Font(tmpCell.Font.FontFamily, 70);
-        //        tmpCell.FlatStyle = FlatStyle.System;
-        //        tmpCell.Click += form.Button_Clicked;
-        //        tmpCell.AutoSize = false;
-        //        tmpCell.Size = new System.Drawing.Size(this.width / 3, this.height / 3);
-        //        this.Controls.Add(tmpCell);
-        //    }
+            for (int i = 0; i < 9; i++)
+            {
+                Cell tmpCell = new Cell(i);
+                tmpCell.TabStop = false;
+                tmpCell.Font = new Font(tmpCell.Font.FontFamily, 70);
+                tmpCell.FlatStyle = FlatStyle.System;
+                tmpCell.Click += form.Button_Clicked;
+                tmpCell.AutoSize = false;
+                tmpCell.Size = new System.Drawing.Size(this.width / 3, this.height / 3);
+                this.Controls.Add(tmpCell);
+            }
 
-        //}
+        }
 
         public Cell GetCellByIndex(int index)
         {
@@ -153,7 +153,17 @@ namespace TicTacToe
         {
             foreach (Cell cell in this.Controls)
             {
-                cell.Enabled = true;
+                if (cell.InvokeRequired)
+                {
+                    cell.Invoke((MethodInvoker)delegate ()
+                   {
+                       cell.Enabled = true;
+                   });
+                }
+                else
+                {
+                    cell.Enabled = true;
+                }
             }
         }
 
@@ -161,7 +171,17 @@ namespace TicTacToe
         {
             foreach (Cell cell in this.Controls)
             {
-                cell.Enabled = false;
+                if (cell.InvokeRequired)
+                {
+                    cell.Invoke((MethodInvoker)delegate ()
+                    {
+                        cell.Enabled = false;
+                    });
+                }
+                else
+                {
+                    cell.Enabled = false;
+                }
             }
         }
 

@@ -18,11 +18,13 @@ namespace TicTacToe
         public const int PORT = 5000;
         const string SERVER_IP = "0.0.0.0";
 
-        private TcpClient client1;
-        private NetworkStream stream1;
+        private TcpClient clientO;
+        private NetworkStream streamO;
 
-        TcpClient client2;
-        private NetworkStream stream2;
+        TcpClient clientX;
+        private NetworkStream streamX;
+
+        private Random rnd = new Random();
 
         public ServerGUI()
         {
@@ -37,14 +39,97 @@ namespace TicTacToe
 
         private void ServerGUI_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (!(this.client1 == null)) this.client1.Close();
-            if (!(this.client2 == null)) this.client2.Close();
+            if (!(this.clientO == null)) this.clientO.Close();
+            if (!(this.clientX == null)) this.clientX.Close();
             Application.Exit();
         }
 
         private void ServerGUI_Shown(object sender, EventArgs e)
         {
             WaitForPlayers();
+
+            Thread gameThread = new Thread(() =>
+            {
+                while (true)
+                {
+                    if (IsFinishedConnecting()) break;
+                }
+                AddText(ConsoleTextBox, "Starting game...");
+                DecideWhoStarts();
+                SendWhoStarts();
+                RunGame();
+            });
+            gameThread.Start();
+        }
+
+        private void DecideWhoStarts()
+        {
+            int random = this.rnd.Next(1, 3);
+            if (random == 2)
+            {
+                TcpClient tmpClient = this.clientO;
+                NetworkStream tmpStream = this.streamO;
+                this.clientO = this.clientX;
+                this.clientX = tmpClient;
+                this.streamO = this.streamX;
+                this.streamX = tmpStream;
+            }
+        }
+
+        private void SendWhoStarts()
+        {
+            byte[] buffer = new byte[1] { 11 };
+            this.streamO.Write(buffer, 0, 1);
+            buffer[0] = 10;
+            this.streamX.Write(buffer, 0, 1);
+        }
+
+        private void RunGame()
+        {
+            while (true)
+            {
+                try
+                {
+                    byte[] bufferIndex = new byte[1];
+
+                    if (!IsClientConnected(clientO))
+                    {
+                        AddText(ConsoleTextBox, "Player O disconnected");
+                        return;
+                    }
+                    streamO.Read(bufferIndex, 0, 1);
+                    AddText(ConsoleTextBox, "player O has played at index " + bufferIndex[0].ToString());
+
+                    if (!IsClientConnected(clientX))
+                    {
+                        AddText(ConsoleTextBox, "Player X disconnected");
+                        return;
+                    }
+                    streamX.Write(bufferIndex, 0, 1);
+                    AddText(ConsoleTextBox, "sending to player X index " + bufferIndex[0].ToString());
+
+                    if (!IsClientConnected(clientX))
+                    {
+                        AddText(ConsoleTextBox, "Player X disconnected");
+                        return;
+                    }
+                    streamX.Read(bufferIndex, 0, 1);
+                    AddText(ConsoleTextBox, "player X has played at index " + bufferIndex[0].ToString());
+
+                    if (!IsClientConnected(clientO))
+                    {
+                        AddText(ConsoleTextBox, "Player O disconnected");
+                        return;
+                    }
+                    streamO.Write(bufferIndex, 0, 1);
+                    AddText(ConsoleTextBox, "sending to player O index " + bufferIndex[0].ToString());
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+                
+            }
         }
 
         private void WaitForPlayers()
@@ -60,25 +145,25 @@ namespace TicTacToe
 
                 waitForFirstPlayer.DoWork += (s, a) =>
                 {
-                    this.client1 = listener.AcceptTcpClient();
-                    this.stream1 = client1.GetStream();
+                    this.clientO = listener.AcceptTcpClient();
+                    this.streamO = clientO.GetStream();
                 };
                 waitForFirstPlayer.RunWorkerCompleted += (s, a) =>
                 {
-                    ConsoleTextBox.Text += "Player 1 connected: " + client1.Client.RemoteEndPoint.ToString() + Environment.NewLine;
-                    Players.Text += client1.Client.RemoteEndPoint.ToString() + Environment.NewLine;
+                    ConsoleTextBox.Text += "Player 1 connected: " + clientO.Client.RemoteEndPoint.ToString() + Environment.NewLine;
+                    Players.Text += clientO.Client.RemoteEndPoint.ToString() + Environment.NewLine;
 
                     BackgroundWorker waitForSecondPlayer = new BackgroundWorker();
 
                     waitForSecondPlayer.DoWork += (s1, a1) =>
                     {
-                        this.client2 = listener.AcceptTcpClient();
-                        this.stream2 = client2.GetStream();
+                        this.clientX = listener.AcceptTcpClient();
+                        this.streamX = clientX.GetStream();
                     };
                     waitForSecondPlayer.RunWorkerCompleted += (s1, a1) =>
                     {
-                        ConsoleTextBox.Text += "player 2 connected: " + client2.Client.RemoteEndPoint.ToString() + Environment.NewLine;
-                        Players.Text += client2.Client.RemoteEndPoint.ToString();
+                        ConsoleTextBox.Text += "player 2 connected: " + clientX.Client.RemoteEndPoint.ToString() + Environment.NewLine;
+                        Players.Text += clientX.Client.RemoteEndPoint.ToString();
                         listener.Stop();
                     };
                     waitForSecondPlayer.RunWorkerAsync();
@@ -91,6 +176,20 @@ namespace TicTacToe
                 MessageBox.Show(ex.Message, "error");
             }
         }
+
+        private void AddText(TextBox box, string text)
+        {
+            box.Invoke((MethodInvoker)delegate ()
+            {
+                box.Text += text + Environment.NewLine;
+            });
+        }
+
+        public bool IsFinishedConnecting()
+        {
+            return (this.clientO != null && this.clientX != null && this.streamO != null && this.streamX != null);
+        }
+
         private bool IsClientConnected(TcpClient client)
         {
             return !((client.Client.Poll(1, SelectMode.SelectRead) && (client.Client.Available == 0)) || !client.Client.Connected);

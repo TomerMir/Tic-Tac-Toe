@@ -54,14 +54,18 @@ namespace TicTacToe
                 {
                     if (IsFinishedConnecting()) break;
                 }
-                AddText(ConsoleTextBox, "Starting game...");
-                DecideWhoStarts();
-                SendWhoStarts();
-                RunGame();
+                Game();
             });
             gameThread.Start();
         }
 
+        private void Game()
+        {
+            AddText(ConsoleTextBox, "Starting game...");
+            DecideWhoStarts();
+            SendWhoStarts();
+            RunGame();
+        }
         private void DecideWhoStarts()
         {
             int random = this.rnd.Next(1, 3);
@@ -78,10 +82,10 @@ namespace TicTacToe
 
         private void SendWhoStarts()
         {
-            byte[] buffer = new byte[1] { 11 };
-            this.streamO.Write(buffer, 0, 1);
+            byte[] buffer = new byte[2] { 11, 0 };
+            this.streamO.Write(buffer, 0, 2);
             buffer[0] = 10;
-            this.streamX.Write(buffer, 0, 1);
+            this.streamX.Write(buffer, 0, 2);
         }
 
         private void RunGame()
@@ -90,45 +94,56 @@ namespace TicTacToe
             {
                 try
                 {
-                    byte[] bufferIndex = new byte[1];
+                    byte[] bufferIndex = new byte[2];
 
-                    if (!IsClientConnected(clientO))
-                    {
-                        AddText(ConsoleTextBox, "Player O disconnected");
-                        return;
-                    }
-                    streamO.Read(bufferIndex, 0, 1);
-                    AddText(ConsoleTextBox, "player O has played at index " + bufferIndex[0].ToString());
+                    streamO.Read(bufferIndex, 0, 2);
 
-                    if (!IsClientConnected(clientX))
-                    {
-                        AddText(ConsoleTextBox, "Player X disconnected");
-                        return;
-                    }
-                    streamX.Write(bufferIndex, 0, 1);
-                    AddText(ConsoleTextBox, "sending to player X index " + bufferIndex[0].ToString());
+                    AddMessegeText('O', bufferIndex[0]);
 
-                    if (!IsClientConnected(clientX))
-                    {
-                        AddText(ConsoleTextBox, "Player X disconnected");
-                        return;
-                    }
-                    streamX.Read(bufferIndex, 0, 1);
-                    AddText(ConsoleTextBox, "player X has played at index " + bufferIndex[0].ToString());
+                    streamX.Write(bufferIndex, 0, 2);
 
-                    if (!IsClientConnected(clientO))
-                    {
-                        AddText(ConsoleTextBox, "Player O disconnected");
-                        return;
-                    }
-                    streamO.Write(bufferIndex, 0, 1);
-                    AddText(ConsoleTextBox, "sending to player O index " + bufferIndex[0].ToString());
+                    CheckIfReset(bufferIndex[0]);
+
+                    streamX.Read(bufferIndex, 0, 2);
+
+                    AddMessegeText('X', bufferIndex[0]);
+
+                    streamO.Write(bufferIndex, 0, 2);
+
+                    CheckIfReset(bufferIndex[0]);
+
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show(e.Message);
+                    return;
                 }
-                
+
+            }
+        }
+
+        private void CheckIfReset(int value)
+        {
+            if (value == 100 || value == 99)
+            {
+                ClearTextBox(ConsoleTextBox);
+                Game();
+            }
+        }
+
+        private void AddMessegeText(char player, int value)
+        {
+            if(value == 100)
+            {
+                AddText(ConsoleTextBox, "player " + player +" has won");
+            }
+            else if (value == 99)
+            {
+                AddText(ConsoleTextBox, "its a tie");
+            }
+            else
+            {
+                AddText(ConsoleTextBox, "sending to player " + player +" index " + value.ToString());
             }
         }
 
@@ -182,6 +197,14 @@ namespace TicTacToe
             box.Invoke((MethodInvoker)delegate ()
             {
                 box.Text += text + Environment.NewLine;
+            });
+        }
+
+        private void ClearTextBox(TextBox box)
+        {
+            box.Invoke((MethodInvoker)delegate ()
+            {
+                box.Text = "";
             });
         }
 

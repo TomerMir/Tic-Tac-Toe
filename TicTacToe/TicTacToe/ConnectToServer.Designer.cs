@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConnectToServer));
             this.ipBox = new System.Windows.Forms.TextBox();
             this.connectBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -58,6 +59,7 @@
             this.ClientSize = new System.Drawing.Size(291, 223);
             this.Controls.Add(this.ipBox);
             this.Controls.Add(this.connectBtn);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ConnectToServer";
             this.Text = "ConnectToServer";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ConnectToServer_FormClosing);

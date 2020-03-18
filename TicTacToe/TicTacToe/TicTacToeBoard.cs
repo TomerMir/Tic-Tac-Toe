@@ -169,19 +169,26 @@ namespace TicTacToe
 
         public void DisableAll()
         {
-            foreach (Cell cell in this.Controls)
+            try
             {
-                if (cell.InvokeRequired)
+                foreach (Cell cell in this.Controls)
                 {
-                    cell.Invoke((MethodInvoker)delegate ()
+                    if (cell.InvokeRequired)
+                    {
+                        cell.Invoke((MethodInvoker)delegate ()
+                        {
+                            cell.Enabled = false;
+                        });
+                    }
+                    else
                     {
                         cell.Enabled = false;
-                    });
+                    }
                 }
-                else
-                {
-                    cell.Enabled = false;
-                }
+            }
+            catch (Exception)
+            {
+                return;
             }
         }
 

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SingleplayerGame));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.difficulty = new System.Windows.Forms.ToolStripMenuItem();
             this.Easy = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,21 +60,21 @@
             // Easy
             // 
             this.Easy.Name = "Easy";
-            this.Easy.Size = new System.Drawing.Size(180, 22);
+            this.Easy.Size = new System.Drawing.Size(131, 22);
             this.Easy.Text = "Easy";
             this.Easy.Click += new System.EventHandler(this.Easy_Click);
             // 
             // Medium
             // 
             this.Medium.Name = "Medium";
-            this.Medium.Size = new System.Drawing.Size(180, 22);
+            this.Medium.Size = new System.Drawing.Size(131, 22);
             this.Medium.Text = "Medium";
             this.Medium.Click += new System.EventHandler(this.Medium_Click);
             // 
             // Impossible
             // 
             this.Impossible.Name = "Impossible";
-            this.Impossible.Size = new System.Drawing.Size(180, 22);
+            this.Impossible.Size = new System.Drawing.Size(131, 22);
             this.Impossible.Text = "Impossible";
             this.Impossible.Click += new System.EventHandler(this.Impossible_Click);
             // 
@@ -83,6 +84,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(499, 549);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "SingleplayerGame";
             this.Text = "Tic Tac Toe";

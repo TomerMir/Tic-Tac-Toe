@@ -41,7 +41,7 @@ namespace TicTacToe
         {
             if (!(this.clientO == null)) this.clientO.Close();
             if (!(this.clientX == null)) this.clientX.Close();
-            Application.Exit();
+            Environment.Exit(Environment.ExitCode);
         }
 
         private void ServerGUI_Shown(object sender, EventArgs e)

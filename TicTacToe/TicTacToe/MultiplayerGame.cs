@@ -69,9 +69,18 @@ namespace TicTacToe
 
         private int ReciveFromServer()
         {
-            byte[] buffer = new byte[2];
-            int length = this.stream.Read(buffer, 0, 2);
-            return buffer[0];
+            try
+            {
+                byte[] buffer = new byte[2];
+                int length = this.stream.Read(buffer, 0, 2);
+                return buffer[0];
+            }
+            catch (Exception)
+            {
+                CloseAll();
+                return 0;
+            }
+            
         }
 
         private void MultiplayerGame_FormClosing(object sender, FormClosingEventArgs e)
@@ -96,7 +105,7 @@ namespace TicTacToe
         private void CloseAll()
         {
             if (!(this.client == null)) this.client.Close();
-            Application.Exit();
+            Environment.Exit(Environment.ExitCode);
         }
 
         private void Connection_Click(object sender, EventArgs e)
@@ -120,17 +129,17 @@ namespace TicTacToe
             int whoWins = Board.IsThrereAWinner(board.GetValues());
             if (whoWins == 2)
             {
-                MessageBox.Show("You Won!");
                 byte[] buffer = new byte[2] { 100, (byte)clickedCell.GetIndex() };
                 this.stream.Write(buffer, 0, 2);
+                MessageBox.Show("You Won!");                
                 Reset();
                 return;
             }
             else if (whoWins == 1)
             {
-                MessageBox.Show("Tie");
                 byte[] buffer = new byte[2] { 99, (byte)clickedCell.GetIndex() };
                 this.stream.Write(buffer, 0, 2);
+                MessageBox.Show("Tie");               
                 Reset();
                 return;
             }
@@ -156,8 +165,7 @@ namespace TicTacToe
                 if (recivedBuffer[0] == 202)
                 {
                     MessageBox.Show("Opponenet disconnected, you won!");
-                    Reset();
-                    return;
+                    CloseAll();
                 }
                 if (recivedBuffer[0] == 100)
                 {

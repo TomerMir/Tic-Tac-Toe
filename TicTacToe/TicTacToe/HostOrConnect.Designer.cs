@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HostOrConnect));
             this.Host = new System.Windows.Forms.Button();
             this.Connect = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -63,6 +64,7 @@
             this.ClientSize = new System.Drawing.Size(381, 325);
             this.Controls.Add(this.Host);
             this.Controls.Add(this.Connect);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "HostOrConnect";
             this.Text = "HostOrConnect";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.HostOrConnect_FormClosing);

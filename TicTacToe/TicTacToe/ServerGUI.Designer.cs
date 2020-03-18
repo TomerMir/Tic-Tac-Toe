@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ServerGUI));
             this.Players = new System.Windows.Forms.TextBox();
             this.PlayersLabel = new System.Windows.Forms.Label();
             this.ConsoleTextBox = new System.Windows.Forms.TextBox();
@@ -107,6 +108,7 @@
             this.Controls.Add(this.ConsoleTextBox);
             this.Controls.Add(this.PlayersLabel);
             this.Controls.Add(this.Players);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ServerGUI";
             this.Text = "ServerGUI";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ServerGUI_FormClosing);

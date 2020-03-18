@@ -30,6 +30,7 @@ namespace TicTacToe
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FirstForm));
             this.Single = new System.Windows.Forms.Button();
             this.Multiplayer = new System.Windows.Forms.Button();
             this.ImageBox = new System.Windows.Forms.PictureBox();
@@ -78,8 +79,9 @@ namespace TicTacToe
             this.Controls.Add(this.ImageBox);
             this.Controls.Add(this.Multiplayer);
             this.Controls.Add(this.Single);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FirstForm";
-            this.Text = "Form1";
+            this.Text = "Tic Tac Toe";
             this.Load += new System.EventHandler(this.FirstForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.ImageBox)).EndInit();
             this.ResumeLayout(false);

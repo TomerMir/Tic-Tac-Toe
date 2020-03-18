@@ -49,18 +49,18 @@ namespace TicTacToe
             Thread reciveWhoStarts = new Thread(() =>
             {
                 this.isO = ReciveFromServer() == 11 ? true : false;
-                this.connection.Invoke((MethodInvoker)delegate ()
+                if (this.isO)
                 {
-                    connection.Text = isO.ToString();
-                });
-                if (!this.isO)
+                    SetInfoLabelText("Your turn");
+                }
+                else
                 {
+                    SetInfoLabelText("Opponents turn");
                     this.board.DisableAll();
                     int index = ReciveFromServer();
                     this.board.EnableAll();
-
                     ChancgeCellValue(board.GetCellByIndex(index), 2);
-
+                    SetInfoLabelText("Your turn");
                 }
                 this.canPlay = true;
             });
@@ -76,6 +76,25 @@ namespace TicTacToe
 
         private void MultiplayerGame_FormClosing(object sender, FormClosingEventArgs e)
         {
+            CloseAll();
+        }
+
+        private void SetInfoLabelText(string text)
+        {
+            if (infoLabel.InvokeRequired)
+            {
+                infoLabel.Invoke((MethodInvoker)delegate ()
+                {
+                    infoLabel.Text = text;
+                });
+            }
+            else
+            {
+                infoLabel.Text = text;
+            }
+        }
+        private void CloseAll()
+        {
             if (!(this.client == null)) this.client.Close();
             Application.Exit();
         }
@@ -88,9 +107,15 @@ namespace TicTacToe
         public void Button_Clicked(object sender, EventArgs e)
         {
             if (!canPlay) return;
+            if (!IsClientConnected())
+            {
+                MessageBox.Show("Lost connection");
+                CloseAll();
+            }
             Cell clickedCell = sender as Cell;
             if (clickedCell.GetValue() != 0) return;
             this.board.DisableAll();
+            SetInfoLabelText("Opponents turn");
             clickedCell.SetTextByValue(isO ? 2 : 1);
             int whoWins = Board.IsThrereAWinner(board.GetValues());
             if (whoWins == 2)
@@ -117,7 +142,14 @@ namespace TicTacToe
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += (s, a) =>
             {
-                this.stream.Read(recivedBuffer, 0, 2);
+                try
+                {
+                    this.stream.Read(recivedBuffer, 0, 2);
+                }
+                catch (Exception)
+                {
+                    recivedBuffer[0] = 202;
+                }
             };
             worker.RunWorkerCompleted += (s, a) =>
             {
@@ -145,7 +177,7 @@ namespace TicTacToe
                 {
                     board.GetCellByIndex(recivedBuffer[0]).SetTextByValue(isO ? 1 : 2);
                 }
-                
+                SetInfoLabelText("Your turn");
                 this.board.EnableAll();
             };
             worker.RunWorkerAsync();
@@ -153,6 +185,7 @@ namespace TicTacToe
 
         private void Reset()
         {
+            SetInfoLabelText("");
             this.canPlay = false;
             this.board.Reset();
             FirstRecived();

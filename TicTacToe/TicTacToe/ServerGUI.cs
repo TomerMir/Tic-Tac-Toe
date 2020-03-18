@@ -92,32 +92,91 @@ namespace TicTacToe
         {
             while (true)
             {
+                byte[] bufferIndex = new byte[2];
+
                 try
                 {
-                    byte[] bufferIndex = new byte[2];
-
                     streamO.Read(bufferIndex, 0, 2);
-
-                    AddMessegeText('O', bufferIndex[0]);
-
-                    streamX.Write(bufferIndex, 0, 2);
-
-                    CheckIfReset(bufferIndex[0]);
-
-                    streamX.Read(bufferIndex, 0, 2);
-
-                    AddMessegeText('X', bufferIndex[0]);
-
-                    streamO.Write(bufferIndex, 0, 2);
-
-                    CheckIfReset(bufferIndex[0]);
-
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    MessageBox.Show(e.Message);
-                    return;
+                    try
+                    {
+                        bufferIndex[0] = 202;
+                        streamX.Write(bufferIndex, 0, 2);
+                        AddText(ConsoleTextBox, "Player O disconnected");
+                    }
+                    catch
+                    {
+                        break;
+                    }
+                    break;
                 }
+
+                AddMessegeText('O', bufferIndex[0]);
+
+                try
+                {
+                    streamX.Write(bufferIndex, 0, 2);
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        bufferIndex[0] = 202;
+                        streamO.Write(bufferIndex, 0, 2);
+                        AddText(ConsoleTextBox, "Player X disconnected");
+                    }
+                    catch
+                    {
+                        break;
+                    }
+                    break;
+                }
+
+                CheckIfReset(bufferIndex[0]);
+
+                try
+                {
+                    streamX.Read(bufferIndex, 0, 2);
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        bufferIndex[0] = 202;
+                        streamO.Write(bufferIndex, 0, 2);
+                        AddText(ConsoleTextBox, "Player X disconnected");
+                    }
+                    catch
+                    {
+                        break;
+                    }
+                    break;
+                }
+
+                AddMessegeText('X', bufferIndex[0]);
+
+                try
+                {
+                    streamO.Write(bufferIndex, 0, 2);
+                }
+                catch (Exception)
+                {
+                    try
+                    {
+                        bufferIndex[0] = 202;
+                        streamX.Write(bufferIndex, 0, 2);
+                        AddText(ConsoleTextBox, "Player O disconnected");
+                    }
+                    catch
+                    {
+                        break;
+                    }
+                    break;
+                }
+
+                CheckIfReset(bufferIndex[0]);
 
             }
         }
@@ -133,9 +192,9 @@ namespace TicTacToe
 
         private void AddMessegeText(char player, int value)
         {
-            if(value == 100)
+            if (value == 100)
             {
-                AddText(ConsoleTextBox, "player " + player +" has won");
+                AddText(ConsoleTextBox, "player " + player + " has won");
             }
             else if (value == 99)
             {
@@ -143,7 +202,7 @@ namespace TicTacToe
             }
             else
             {
-                AddText(ConsoleTextBox, "sending to player " + player +" index " + value.ToString());
+                AddText(ConsoleTextBox, "sending to player " + player + " index " + value.ToString());
             }
         }
 

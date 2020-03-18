@@ -28,25 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.connection = new System.Windows.Forms.Button();
+            this.infoLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // connection
+            // infoLabel
             // 
-            this.connection.Location = new System.Drawing.Point(352, 1);
-            this.connection.Name = "connection";
-            this.connection.Size = new System.Drawing.Size(92, 22);
-            this.connection.TabIndex = 0;
-            this.connection.Text = "Test Connectoin";
-            this.connection.UseVisualStyleBackColor = true;
-            this.connection.Click += new System.EventHandler(this.Connection_Click);
+            this.infoLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.infoLabel.Location = new System.Drawing.Point(184, 9);
+            this.infoLabel.Name = "infoLabel";
+            this.infoLabel.Size = new System.Drawing.Size(139, 34);
+            this.infoLabel.TabIndex = 1;
+            this.infoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MultiplayerGame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(499, 549);
-            this.Controls.Add(this.connection);
+            this.Controls.Add(this.infoLabel);
             this.Name = "MultiplayerGame";
             this.Text = "Tic Tac Toe";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MultiplayerGame_FormClosing);
@@ -57,6 +56,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Button connection;
+        private System.Windows.Forms.Label infoLabel;
     }
 }

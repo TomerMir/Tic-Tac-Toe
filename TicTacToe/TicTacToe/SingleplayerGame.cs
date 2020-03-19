@@ -173,7 +173,7 @@ namespace TicTacToe
 
         private void Impossible_Click(object sender, EventArgs e)
         {
-            this.difficultyDepth = 10;
+            this.difficultyDepth = 9;
         }
     }
 }

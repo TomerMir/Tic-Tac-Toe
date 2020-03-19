@@ -215,34 +215,20 @@ namespace TicTacToe
                 ConsoleTextBox.Text += "Waiting for players..." + Environment.NewLine;
                 listener.Start();
 
-                BackgroundWorker waitForFirstPlayer = new BackgroundWorker();
-
-                waitForFirstPlayer.DoWork += (s, a) =>
+                Thread waitForPlayers = new Thread(() =>
                 {
                     this.clientO = listener.AcceptTcpClient();
                     this.streamO = clientO.GetStream();
-                };
-                waitForFirstPlayer.RunWorkerCompleted += (s, a) =>
-                {
-                    ConsoleTextBox.Text += "Player 1 connected: " + clientO.Client.RemoteEndPoint.ToString() + Environment.NewLine;
-                    Players.Text += clientO.Client.RemoteEndPoint.ToString() + Environment.NewLine;
+                    AddText(ConsoleTextBox, "Player 1 connected: " + clientO.Client.RemoteEndPoint.ToString());
+                    AddText(Players, clientO.Client.RemoteEndPoint.ToString());
 
-                    BackgroundWorker waitForSecondPlayer = new BackgroundWorker();
-
-                    waitForSecondPlayer.DoWork += (s1, a1) =>
-                    {
-                        this.clientX = listener.AcceptTcpClient();
-                        this.streamX = clientX.GetStream();
-                    };
-                    waitForSecondPlayer.RunWorkerCompleted += (s1, a1) =>
-                    {
-                        ConsoleTextBox.Text += "player 2 connected: " + clientX.Client.RemoteEndPoint.ToString() + Environment.NewLine;
-                        Players.Text += clientX.Client.RemoteEndPoint.ToString();
-                        listener.Stop();
-                    };
-                    waitForSecondPlayer.RunWorkerAsync();
-                };
-                waitForFirstPlayer.RunWorkerAsync();
+                    this.clientX = listener.AcceptTcpClient();
+                    this.streamX = clientX.GetStream();
+                    AddText(ConsoleTextBox, "Player 2 connected: " + clientX.Client.RemoteEndPoint.ToString());
+                    AddText(Players, clientX.Client.RemoteEndPoint.ToString());
+                    listener.Stop();
+                });
+                waitForPlayers.Start();
             }
 
             catch (Exception ex)
